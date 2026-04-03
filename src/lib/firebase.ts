@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
-const firebaseConfig = {
+const envFirebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -11,9 +11,24 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
-if (!firebaseConfig.apiKey) {
-  // This warning helps during first-time setup when env vars are still missing.
-  console.warn('Firebase environment variables are missing. Create a .env.local file.')
+export const hasFirebaseEnv = Object.values(envFirebaseConfig).every((value) => Boolean(value))
+
+const firebaseConfig = hasFirebaseEnv
+  ? envFirebaseConfig
+  : {
+      // Use safe placeholders so the app shell can still render on misconfigured deployments.
+      apiKey: 'placeholder-api-key',
+      authDomain: 'placeholder.firebaseapp.com',
+      projectId: 'placeholder-project',
+      storageBucket: 'placeholder.appspot.com',
+      messagingSenderId: '000000000000',
+      appId: '1:000000000000:web:0000000000000000000000',
+    }
+
+if (!hasFirebaseEnv) {
+  console.warn(
+    'Firebase environment variables are missing for this deployment. Configure VITE_FIREBASE_* values in your build environment.',
+  )
 }
 
 const app = initializeApp(firebaseConfig)

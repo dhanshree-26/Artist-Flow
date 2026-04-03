@@ -5,11 +5,37 @@
     <link rel="icon" type="image/svg+xml" href="/Artist-Flow/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>artist-flow</title>
-    <script type="module" crossorigin src="/Artist-Flow/assets/index-B2kUk5Tg.js"></script>
+    <script type="module" crossorigin src="/Artist-Flow/assets/index-Luu-d-Zi.js"></script>
     <link rel="modulepreload" crossorigin href="/Artist-Flow/assets/jsx-runtime-BnxRlLMJ.js">
     <link rel="stylesheet" crossorigin href="/Artist-Flow/assets/index-B4Rsd_rD.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.__artistFlowBootError = false
+    </script>
+    <script>
+      if (window.location.hostname.endsWith('github.io')) {
+        window.setTimeout(() => {
+          if (!window.__artistFlowBootError) {
+            return
+          }
+
+          const root = document.getElementById('root')
+          if (!root) {
+            return
+          }
+
+          root.innerHTML = [
+            '<div style="max-width:680px;margin:3rem auto;padding:1.2rem 1.4rem;border:1px solid #f1c2c2;border-radius:10px;background:#fff7f7;color:#611a15;font-family:ui-sans-serif,system-ui,sans-serif;line-height:1.6">',
+            '<h1 style="margin:0 0 .5rem;font-size:1.1rem">Deployment setup required</h1>',
+            '<p style="margin:.3rem 0">This page is serving raw source files instead of a built app.</p>',
+            '<p style="margin:.3rem 0">Go to GitHub repository settings and set Pages Source to <strong>GitHub Actions</strong>.</p>',
+            '<p style="margin:.3rem 0">Then rerun the <strong>Deploy to GitHub Pages</strong> workflow.</p>',
+            '</div>',
+          ].join('')
+        }, 400)
+      }
+    </script>
   </body>
 </html>

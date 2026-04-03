@@ -1,5 +1,9 @@
 export const mapAuthError = (code: string) => {
   switch (code) {
+    case 'auth/invalid-api-key':
+      return 'Firebase is not configured for this deployment yet. Add VITE_FIREBASE_* values in GitHub secrets.'
+    case 'auth/configuration-not-found':
+      return 'Firebase Auth configuration is missing. Verify project settings and deployment secrets.'
     case 'auth/invalid-credential':
       return 'Invalid email or password.'
     case 'auth/email-already-in-use':

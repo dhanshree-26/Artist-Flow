@@ -76,11 +76,26 @@ This repository is configured to auto-deploy to GitHub Pages on every push to `m
 ### One-time GitHub setup
 
 1. Open your repository on GitHub.
-2. Go to **Settings -> Pages**.
-3. In **Build and deployment**, set **Source** to **GitHub Actions**.
-4. Push changes to `main`.
-5. GitHub will publish the site at:
+2. Go to **Settings -> Secrets and variables -> Actions**.
+3. Add these repository secrets:
+	- `VITE_FIREBASE_API_KEY`
+	- `VITE_FIREBASE_AUTH_DOMAIN`
+	- `VITE_FIREBASE_PROJECT_ID`
+	- `VITE_FIREBASE_STORAGE_BUCKET`
+	- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+	- `VITE_FIREBASE_APP_ID`
+4. Go to **Settings -> Pages**.
+5. In **Build and deployment**, set **Source** to **GitHub Actions**.
+6. Push changes to `main`.
+7. GitHub will publish the site at:
 	- `https://dhanshree-26.github.io/Artist-Flow/`
+
+### If GitHub Pages shows a blank page
+
+1. Confirm **Pages Source** is `GitHub Actions` (not `Deploy from a branch`).
+2. Open **Actions** and check the `Deploy to GitHub Pages` workflow result.
+3. If the workflow fails, verify all `VITE_FIREBASE_*` secrets are present.
+4. If the page source shows `/src/main.tsx`, GitHub is serving raw source instead of build output.
 
 ### Manual deploy command (optional)
 
