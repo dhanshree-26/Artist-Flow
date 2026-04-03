@@ -1,0 +1,81 @@
+ARTIST FLOW - VERCEL HOSTING (STEP BY STEP)
+
+Goal:
+Host frontend on Vercel while keeping persistent data in Firebase Firestore.
+
+Important:
+Data persistence does NOT come from Vercel.
+Data persistence comes from Firebase Firestore.
+
+--------------------------------------------------
+1) Keep Firebase backend as source of truth
+--------------------------------------------------
+1. Firebase project must be artist-flow-prod.
+2. Firestore must be Production database.
+3. Auth Email/Password must be enabled.
+4. Firestore rules must be deployed.
+
+--------------------------------------------------
+2) Prepare project for Vercel
+--------------------------------------------------
+1. Ensure vercel.json exists in root (already added).
+2. Push code to GitHub.
+3. Import repository in Vercel.
+
+--------------------------------------------------
+3) Vercel build settings
+--------------------------------------------------
+Use these values in Vercel project settings:
+
+Framework Preset: Vite
+Install Command: npm install
+Build Command: npm run build
+Output Directory: dist
+
+--------------------------------------------------
+4) Add Vercel environment variables
+--------------------------------------------------
+In Vercel -> Project Settings -> Environment Variables, add:
+
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_SENDER_ID
+VITE_FIREBASE_APP_ID
+
+For feedback form endpoint (required on Vercel):
+VITE_FEEDBACK_ENDPOINT=https://us-central1-artist-flow-prod.cloudfunctions.net/sendFeedback
+
+(Replace URL if your function region/project is different.)
+
+--------------------------------------------------
+5) Configure Firebase function params (one-time)
+--------------------------------------------------
+Run from local project:
+
+npx firebase-tools login
+npx firebase-tools use artist-flow-prod
+npx firebase-tools functions:params:set RESEND_API_KEY="YOUR_RESEND_KEY"
+npx firebase-tools functions:params:set FEEDBACK_TO_EMAIL="ojassomani@gmail.com"
+npx firebase-tools functions:params:set FEEDBACK_FROM_EMAIL="onboarding@resend.dev"
+npx firebase-tools deploy --only functions,firestore:rules,firestore:indexes
+
+--------------------------------------------------
+6) Firebase Auth domain allowlist update
+--------------------------------------------------
+After Vercel deploy:
+1. Copy your Vercel domain.
+2. Go to Firebase Console -> Authentication -> Settings -> Authorized domains.
+3. Add your Vercel domain.
+
+--------------------------------------------------
+7) Validate persistence
+--------------------------------------------------
+1. Open Vercel site.
+2. Login as venue and create post.
+3. Check Firestore console opportunities collection to ensure document exists.
+4. Stop local servers and reopen Vercel site.
+5. Login as artist and verify post is still visible.
+
+If posts are visible in Firestore console, data is persistent regardless of local server status.

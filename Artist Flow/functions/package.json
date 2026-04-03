@@ -1,0 +1,13 @@
+{
+  "name": "artist-flow-functions",
+  "private": true,
+  "main": "index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "firebase-functions": "^5.0.1",
+    "resend": "^6.10.0"
+  }
+}

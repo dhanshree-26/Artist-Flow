@@ -1,0 +1,40 @@
+DATA PERSISTENCE CHECKLIST (POSTS DISAPPEAR ISSUE)
+
+Use this checklist when posts are not retained after restart.
+
+1) Confirm cloud database writes
+- Create a post.
+- Immediately check Firebase Console -> Firestore -> opportunities.
+- If no new doc appears, app is not writing to cloud.
+
+2) Confirm correct Firebase project
+- Check .env.local values.
+- VITE_FIREBASE_PROJECT_ID must be artist-flow-prod.
+
+3) Confirm Firestore rules are deployed
+Run:
+npx firebase-tools deploy --only firestore:rules,firestore:indexes
+
+4) Confirm authentication is working
+- User must be logged in.
+- Email verification must be completed if enabled.
+
+5) Confirm no emulator usage
+- Do NOT run firestore emulator if you expect production persistence.
+- Remove any emulator env vars (for example FIRESTORE_EMULATOR_HOST).
+
+6) Confirm hosting env vars are set correctly
+- On Firebase Hosting: frontend env is from build-time local .env.local before deploy.
+- On Vercel: set all VITE_FIREBASE_* variables in Vercel env settings.
+
+7) Confirm query visibility
+- Artists should see all open posts.
+- Venue owners can view all posts or my posts.
+
+8) Final recovery command sequence
+npm install
+npm --prefix functions install
+npm run build
+npm run firebase:deploy
+
+Then hard refresh browser and test again.
