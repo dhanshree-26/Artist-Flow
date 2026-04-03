@@ -83,14 +83,10 @@ export const SignupPage = () => {
 
       writeCachedProfile(credential.user.uid, profilePayload)
 
-      try {
-        await setDoc(doc(db, 'users', credential.user.uid), {
-          ...profilePayload,
-          createdAt: serverTimestamp(),
-        })
-      } catch {
-        // Allow login to continue with cached profile mode if Firestore write is blocked.
-      }
+      await setDoc(doc(db, 'users', credential.user.uid), {
+        ...profilePayload,
+        createdAt: serverTimestamp(),
+      })
 
       await sendEmailVerification(credential.user)
       navigate('/verify-email', { replace: true, state: { email: form.email } })

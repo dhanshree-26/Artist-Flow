@@ -14,6 +14,8 @@ export const mapAuthError = (code: string) => {
       return 'Too many attempts. Please wait and try again.'
     case 'auth/network-request-failed':
       return 'Network error. Check your internet and retry.'
+    case 'permission-denied':
+      return 'Firestore write failed due to rules/permissions. Deploy Firebase rules and try again.'
     default:
       return 'Something went wrong. Please try again.'
   }

@@ -49,6 +49,11 @@ VITE_FEEDBACK_ENDPOINT=https://us-central1-artist-flow-prod.cloudfunctions.net/s
 
 (Replace URL if your function region/project is different.)
 
+If you get this in browser console during feedback submit:
+"Failed to execute 'json' on 'Response': Unexpected end of JSON input"
+it means the endpoint response is not valid JSON (often wrong endpoint URL or a non-API HTML response).
+Verify VITE_FEEDBACK_ENDPOINT is correct and redeploy.
+
 --------------------------------------------------
 5) Configure Firebase function params (one-time)
 --------------------------------------------------
@@ -57,7 +62,7 @@ Run from local project:
 npx firebase-tools login
 npx firebase-tools use artist-flow-prod
 npx firebase-tools functions:params:set RESEND_API_KEY="YOUR_RESEND_KEY"
-npx firebase-tools functions:params:set FEEDBACK_TO_EMAIL="ojassomani@gmail.com"
+npx firebase-tools functions:params:set FEEDBACK_TO_EMAIL="dhanshreepathrabe26@gmail.com"
 npx firebase-tools functions:params:set FEEDBACK_FROM_EMAIL="onboarding@resend.dev"
 npx firebase-tools deploy --only functions,firestore:rules,firestore:indexes
 
@@ -79,3 +84,19 @@ After Vercel deploy:
 5. Login as artist and verify post is still visible.
 
 If posts are visible in Firestore console, data is persistent regardless of local server status.
+
+--------------------------------------------------
+8) If all users appear as artist on Vercel
+--------------------------------------------------
+Cause:
+User profile write to Firestore failed during signup, so only local fallback profile was used.
+
+Fix:
+1. Deploy Firestore rules and indexes:
+	npm run firebase:deploy -- --project artist-flow-prod
+2. Ensure VITE_FIREBASE_* env vars are set in Vercel project.
+3. Ensure your Vercel domain is in Firebase Auth authorized domains.
+4. Create a new test account and choose Venue in signup.
+
+Expected:
+The user document in Firestore users/{uid} must contain role: "venue" for venue signups.

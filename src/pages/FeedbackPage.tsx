@@ -48,7 +48,19 @@ export const FeedbackPage = () => {
         body: JSON.stringify(form),
       })
 
-      const payload = (await response.json()) as { ok: boolean; message?: string }
+      const rawBody = await response.text()
+      let payload: { ok?: boolean; message?: string } = {}
+
+      if (rawBody) {
+        try {
+          payload = JSON.parse(rawBody) as { ok?: boolean; message?: string }
+        } catch {
+          payload = {
+            ok: false,
+            message: 'Feedback endpoint returned an invalid response. Check VITE_FEEDBACK_ENDPOINT and deployment logs.',
+          }
+        }
+      }
 
       if (!response.ok || !payload.ok) {
         throw new Error(payload.message ?? 'Unable to send feedback right now.')

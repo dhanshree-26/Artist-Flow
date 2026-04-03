@@ -6,6 +6,7 @@ const { Resend } = require('resend')
 const RESEND_API_KEY = defineString('RESEND_API_KEY')
 const FEEDBACK_TO_EMAIL = defineString('FEEDBACK_TO_EMAIL')
 const FEEDBACK_FROM_EMAIL = defineString('FEEDBACK_FROM_EMAIL')
+const DEFAULT_FEEDBACK_TO_EMAIL = 'dhanshreepathrabe26@gmail.com'
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -71,7 +72,7 @@ exports.sendFeedback = onRequest({ cors: true }, async (req, res) => {
 
   try {
     const resend = new Resend(RESEND_API_KEY.value())
-    const toEmail = extractEmail(FEEDBACK_TO_EMAIL.value())
+    const toEmail = extractEmail(FEEDBACK_TO_EMAIL.value()) || DEFAULT_FEEDBACK_TO_EMAIL
     const fromRaw = String(FEEDBACK_FROM_EMAIL.value() || '').trim()
     const fromEmail = extractEmail(fromRaw)
 
