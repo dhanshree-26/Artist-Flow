@@ -7,6 +7,10 @@ Important:
 Data persistence does NOT come from Vercel.
 Data persistence comes from Firebase Firestore.
 
+Free-tier note:
+You can run this project without Firebase Blaze by using Vercel API route for feedback mail.
+Do NOT deploy Firebase Functions in this mode.
+
 --------------------------------------------------
 1) Keep Firebase backend as source of truth
 --------------------------------------------------
@@ -44,27 +48,28 @@ VITE_FIREBASE_STORAGE_BUCKET
 VITE_FIREBASE_MESSAGING_SENDER_ID
 VITE_FIREBASE_APP_ID
 
-For feedback form endpoint (required on Vercel):
-VITE_FEEDBACK_ENDPOINT=https://us-central1-artist-flow-prod.cloudfunctions.net/sendFeedback
+For feedback mail from Vercel API route (required):
+RESEND_API_KEY=YOUR_RESEND_KEY
+FEEDBACK_TO_EMAIL=dhanshreepathrabe26@gmail.com
+FEEDBACK_FROM_EMAIL=onboarding@resend.dev
 
-(Replace URL if your function region/project is different.)
+Optional (you can skip this because app already defaults to /api/feedback):
+VITE_FEEDBACK_ENDPOINT=/api/feedback
 
 If you get this in browser console during feedback submit:
 "Failed to execute 'json' on 'Response': Unexpected end of JSON input"
-it means the endpoint response is not valid JSON (often wrong endpoint URL or a non-API HTML response).
-Verify VITE_FEEDBACK_ENDPOINT is correct and redeploy.
+it means the endpoint response is not valid JSON (often wrong endpoint URL or rewrite conflict).
+This repo excludes /api/* from SPA rewrite in vercel.json.
+Redeploy after pulling latest changes and confirm /api/feedback returns JSON.
 
 --------------------------------------------------
-5) Configure Firebase function params (one-time)
+5) Configure backend on free plan (no Firebase Functions)
 --------------------------------------------------
 Run from local project:
 
 npx firebase-tools login
 npx firebase-tools use artist-flow-prod
-npx firebase-tools functions:params:set RESEND_API_KEY="YOUR_RESEND_KEY"
-npx firebase-tools functions:params:set FEEDBACK_TO_EMAIL="dhanshreepathrabe26@gmail.com"
-npx firebase-tools functions:params:set FEEDBACK_FROM_EMAIL="onboarding@resend.dev"
-npx firebase-tools deploy --only functions,firestore:rules,firestore:indexes
+npx firebase-tools deploy --only firestore:rules,firestore:indexes --project artist-flow-prod
 
 --------------------------------------------------
 6) Firebase Auth domain allowlist update
@@ -93,7 +98,7 @@ User profile write to Firestore failed during signup, so only local fallback pro
 
 Fix:
 1. Deploy Firestore rules and indexes:
-	npm run firebase:deploy -- --project artist-flow-prod
+	npx firebase-tools deploy --only firestore:rules,firestore:indexes --project artist-flow-prod
 2. Ensure VITE_FIREBASE_* env vars are set in Vercel project.
 3. Ensure your Vercel domain is in Firebase Auth authorized domains.
 4. Create a new test account and choose Venue in signup.
