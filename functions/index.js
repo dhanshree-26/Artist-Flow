@@ -93,7 +93,7 @@ exports.sendFeedback = onRequest({ cors: true }, async (req, res) => {
 
     const fromHeader = fromRaw.includes('<') ? fromRaw : `Artist Flow <${fromEmail}>`
 
-    const ownerResult = await resend.emails.send({
+    const sendResult = await resend.emails.send({
       from: fromHeader,
       to: toEmail,
       subject: `[Artist Flow] ${category.toUpperCase()} feedback from ${fullName}`,
@@ -102,27 +102,11 @@ exports.sendFeedback = onRequest({ cors: true }, async (req, res) => {
       html: `<h2>New Artist Flow feedback</h2><p><strong>Name:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Category:</strong> ${category}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, '<br/>')}</p>`,
     })
 
-    if (ownerResult.error) {
-      logger.error('Resend rejected owner feedback email', ownerResult.error)
+    if (sendResult.error) {
+      logger.error('Resend rejected feedback email', sendResult.error)
       return res.status(500).json({
         ok: false,
-        message: ownerResult.error.message || 'Unable to send feedback email right now.',
-      })
-    }
-
-    const userResult = await resend.emails.send({
-      from: fromHeader,
-      to: email,
-      subject: 'Thanks for your feedback to Artist Flow',
-      text: `Hi ${fullName},\n\nThank you for sharing your feedback with Artist Flow. Our team has received your message and will review it shortly.\n\nCategory: ${category}\n\nYour message:\n${message}\n\nRegards,\nArtist Flow Team`,
-      html: `<h2>Thank you for your feedback</h2><p>Hi ${fullName},</p><p>Thank you for sharing your feedback with Artist Flow. Our team has received your message and will review it shortly.</p><p><strong>Category:</strong> ${category}</p><p><strong>Your message:</strong></p><p>${message.replace(/\n/g, '<br/>')}</p><p>Regards,<br/>Artist Flow Team</p>`,
-    })
-
-    if (userResult.error) {
-      logger.error('Resend rejected user thank-you email', userResult.error)
-      return res.status(500).json({
-        ok: false,
-        message: userResult.error.message || 'Feedback was received, but thank-you email could not be sent.',
+        message: sendResult.error.message || 'Unable to send feedback email right now.',
       })
     }
 

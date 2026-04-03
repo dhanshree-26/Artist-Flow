@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   try {
     const resend = new Resend(apiKey)
 
-    const ownerResult = await resend.emails.send({
+    const result = await resend.emails.send({
       from: `Artist Flow <${fromEmail}>`,
       to: toEmail,
       replyTo: email,
@@ -50,23 +50,8 @@ export default async function handler(req, res) {
       html: `<h2>New Artist Flow feedback</h2><p><strong>Name:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Category:</strong> ${category}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, '<br/>')}</p>`,
     })
 
-    if (ownerResult.error) {
-      return res.status(500).json({ ok: false, message: ownerResult.error.message || 'Unable to send feedback email.' })
-    }
-
-    const userResult = await resend.emails.send({
-      from: `Artist Flow <${fromEmail}>`,
-      to: email,
-      subject: 'Thanks for your feedback to Artist Flow',
-      text: `Hi ${fullName},\n\nThank you for sharing your feedback with Artist Flow. Our team has received your message and will review it shortly.\n\nCategory: ${category}\n\nYour message:\n${message}\n\nRegards,\nArtist Flow Team`,
-      html: `<h2>Thank you for your feedback</h2><p>Hi ${fullName},</p><p>Thank you for sharing your feedback with Artist Flow. Our team has received your message and will review it shortly.</p><p><strong>Category:</strong> ${category}</p><p><strong>Your message:</strong></p><p>${message.replace(/\n/g, '<br/>')}</p><p>Regards,<br/>Artist Flow Team</p>`,
-    })
-
-    if (userResult.error) {
-      return res.status(500).json({
-        ok: false,
-        message: userResult.error.message || 'Feedback was received, but thank-you email could not be sent.',
-      })
+    if (result.error) {
+      return res.status(500).json({ ok: false, message: result.error.message || 'Unable to send feedback email.' })
     }
 
     return res.status(200).json({ ok: true })

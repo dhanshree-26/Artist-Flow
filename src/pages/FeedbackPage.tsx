@@ -81,7 +81,7 @@ export const FeedbackPage = () => {
     <section className="surface-card">
       <p className="hero-tag">Feedback automation</p>
       <h2>Send feedback directly to your team inbox</h2>
-      <p>Your message is emailed to the owner, and you receive a thank-you email confirmation.</p>
+      <p>The message is sent through a Firebase Cloud Function to your configured recipient email.</p>
 
       <form className="form-stack" onSubmit={handleSubmit}>
         <label>
