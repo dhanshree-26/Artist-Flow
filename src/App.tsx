@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute, PublicOnlyRoute } from './components/ProtectedRoute'
 import { ThemeToggle } from './components/ThemeToggle'
 import { AuthProvider } from './context/AuthContext'
@@ -47,10 +47,12 @@ const RouteLoader = () => (
 )
 
 function App() {
+  const Router = import.meta.env.BASE_URL === '/' ? BrowserRouter : HashRouter
+
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
+        <Router>
           <ThemeToggle />
           <Suspense fallback={<RouteLoader />}>
             <Routes>
@@ -95,7 +97,7 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
-        </BrowserRouter>
+        </Router>
       </AuthProvider>
     </ThemeProvider>
   )

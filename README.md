@@ -65,3 +65,27 @@ npm run build
 Use the detailed setup guide here:
 
 - `FIREBASE_VERCEL_SETUP.md`
+
+## Deploy to GitHub Pages (Automatic)
+
+This repository is configured to auto-deploy to GitHub Pages on every push to `main` using:
+
+- `.github/workflows/deploy-github-pages.yml`
+- `npm run build:github`
+
+### One-time GitHub setup
+
+1. Open your repository on GitHub.
+2. Go to **Settings -> Pages**.
+3. In **Build and deployment**, set **Source** to **GitHub Actions**.
+4. Push changes to `main`.
+5. GitHub will publish the site at:
+	- `https://dhanshree-26.github.io/Artist-Flow/`
+
+### Manual deploy command (optional)
+
+If you want to deploy manually from your machine, run:
+
+```bash
+npm run deploy:github
+```
