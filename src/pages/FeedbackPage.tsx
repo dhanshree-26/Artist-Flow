@@ -11,7 +11,7 @@ interface FeedbackFormState {
 
 export const FeedbackPage = () => {
   const { profile, user } = useAuth()
-  const feedbackEndpoint = import.meta.env.VITE_FEEDBACK_ENDPOINT || '/api/feedback'
+  const feedbackEndpoint = '/api/feedback'
 
   const [form, setForm] = useState<FeedbackFormState>({
     fullName: '',
